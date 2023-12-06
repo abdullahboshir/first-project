@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-  createStudent,
   deleteSingleStudent,
   getAllSudents,
   getSingleStudent,
@@ -8,7 +7,6 @@ import {
 
 const router = express.Router();
 
-router.post('/create-student', createStudent);
 router.get('/', getAllSudents);
 router.get('/:studentId', getSingleStudent);
 router.delete('/:studentId', deleteSingleStudent);

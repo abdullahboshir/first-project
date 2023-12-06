@@ -7,8 +7,6 @@ import {
   TStudent,
   TUserName,
 } from './student/student.interface';
-import bcrypt from 'bcrypt';
-import config from '../config';
 
 const userNameShema = new Schema<TUserName>({
   firstName: {
@@ -49,11 +47,12 @@ const localGaurdianSchema = new Schema<TLocalGuardian>({
 
 const StudentSchema = new Schema<TStudent, StudentModel>(
   {
-    id: { type: String, required: true, unique: true },
-    password: {
-      type: String,
-      required: [true, 'password is required'],
-      maxLength: [20, 'password can not be more then 20 characters'],
+    id: { type: String, required: [true, 'ID is requird'], unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id is required'],
+      unique: true,
+      ref: 'User',
     },
     name: userNameShema,
     gender: {
@@ -65,7 +64,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       },
       required: true,
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     email: { type: String, required: true, unique: true },
     contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true },
@@ -84,10 +83,10 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileImg: { type: String },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
+      required: true,
     },
     isDeleted: {
       type: Boolean,
@@ -104,21 +103,6 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
 // virtual
 StudentSchema.virtual('fullName').get(function () {
   return this.name.firstName + this.name.middleName + this.name.lastName;
-});
-
-// pre save middleware /hook
-StudentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-StudentSchema.post('save', function (doc, next) {
-  doc.password = '';
-
-  next();
 });
 
 // creating a custom static method
