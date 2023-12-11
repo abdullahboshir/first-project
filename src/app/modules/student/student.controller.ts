@@ -2,13 +2,14 @@ import {
   deleteSingleStudentFromDB,
   getSingleStudentFromDB,
   getStudentFromDB,
+  updateStudentFromDB,
 } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 
 export const getAllSudents = catchAsync(async (req, res) => {
-  const result = await getStudentFromDB();
+  const result = await getStudentFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -38,6 +39,19 @@ export const deleteSingleStudent = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student is deleted successfully',
+    data: result,
+  });
+});
+
+export const updateStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const { student } = req.body;
+  const result = await updateStudentFromDB(studentId, student);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student is updated successfully',
     data: result,
   });
 });

@@ -88,6 +88,10 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       ref: 'AcademicSemester',
       required: true,
     },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'academicDepartment',
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -102,7 +106,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
 
 // virtual
 StudentSchema.virtual('fullName').get(function () {
-  return this.name.firstName + this.name.middleName + this.name.lastName;
+  return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName;
 });
 
 // creating a custom static method
