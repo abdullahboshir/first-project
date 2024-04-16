@@ -1,7 +1,11 @@
 import express from 'express';
-import { createAcademicSemester } from './academicSemester.controller';
+import {
+  createAcademicSemester,
+  getAllAcademicSemesters,
+} from './academicSemester.controller';
 import validateRequest from '../../midddlewares/validatedRequest';
 import { createAcademicSemesterValidationSchema } from './academicSemester.validation';
+import auth from '../../midddlewares/auth';
 
 const router = express.Router();
 
@@ -11,7 +15,7 @@ router.post(
   createAcademicSemester,
 );
 
-// router.get('/', getAllSudents);
+router.get('/', auth('student', 'faculty', 'admin'), getAllAcademicSemesters);
 // router.get('/:studentId', getSingleStudent);
 // router.delete('/:studentId', deleteSingleStudent);
 

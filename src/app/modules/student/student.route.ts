@@ -11,10 +11,10 @@ import { updateStudentValidationSchema } from './student.validation';
 const router = express.Router();
 
 router.get('/', getAllSudents);
-router.get('/:studentId', getSingleStudent);
-router.delete('/:studentId', deleteSingleStudent);
+router.get('/:id', getSingleStudent);
+router.delete('/:id', deleteSingleStudent);
 router.patch(
-  '/:studentId',
+  '/:id',
   validateRequest(updateStudentValidationSchema),
   updateStudent,
 );
